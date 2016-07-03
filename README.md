@@ -21,11 +21,13 @@ install dependency package
 
 ```sh
 $ npm install
+
+# start the server
 $ npm start
-
 or
-
 $ node bin/www
+
+# go to http://localhost:3000
 ```
 
 additional install nodemon for monitoring any changes in your code and automatically restart the server
