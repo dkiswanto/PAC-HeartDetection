@@ -1,0 +1,38 @@
+<!-- data-color="blue | azure | green | orange | red | purple" -->
+<div class="sidebar" data-color="red" data-image="#">
+
+    <div class="sidebar-wrapper">
+        <div class="logo">
+            <a href="#" class="simple-text">
+                {{ APPS_NAME }}
+            </a>
+        </div>
+
+        <ul class="nav">
+            <li <% if (page_name === 'main') { %>class="active" <% } %> >
+                <a href="/dashboard">
+                    <i class="fa fa-tachometer"></i>
+                    <p>Dashboard</p>
+                </a>
+            </li>
+            <li <% if (page_name === 'patients') { %>class="active" <% } %> >
+                <a href="/dashboard/patients">
+                    <i class="pe-7s-users"></i>
+                    <p>List Patient</p>
+                </a>
+            </li>
+            <li <% if (page_name === 'monitoring') { %>class="active" <% } %> >
+                <a href="/dashboard/monitoring">
+                    <i class="fa fa-desktop"></i>
+                    <p>Monitoring Mode</p>
+                </a>
+            </li>
+            <li <% if (page_name === 'log-alert') { %>class="active" <% } %> >
+                <a href="/dashboard/log-alert">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    <p>Log Alert</p>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

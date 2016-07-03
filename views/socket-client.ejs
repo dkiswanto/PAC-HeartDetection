@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Visual Output MQTT</title>
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+<div class="container" style="margin-top: 50px">
+    <div class="alert alert-info">
+        <strong>ATTENTIION!!</strong><br>
+        This page is currently subscribing on mqtt topic <strong>"stream/kinto21_sensor"</strong>.<br>
+        <strong>"$ node mqtt-client_DEVONLY/mqtt-client-publish.js"</strong> for dummy client,
+    </div></div>
+
+
+    <div class="center-block" id="chartContainer" style="width: 800px; height: 300px; margin-top: 100px;"></div>
+
+<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+<script src="/lib/canvasjs/canvasjs.min.js"></script>
+
+
+<script>
+
+    var socket = io('http://localhost:3000');
+    // listening to event
+
+    var dps = []; // dataPoints
+
+    var chart = new CanvasJS.Chart("chartContainer",{
+        data: [{ type: "line", dataPoints: dps }]
+    });
+
+    var xVal = 0;
+    var yVal = 100;
+    var updateInterval = 100;
+    var dataLength = 100; // number of dataPoints visible at any point
+
+
+    socket.on('stream/kinto21_sensor', function (data) {
+//        console.log(data);
+        dps.push({
+            x: xVal,
+            y: parseInt(data.data)
+        });
+
+        xVal++;
+
+        if (dps.length > dataLength)
+        {
+            dps.shift();
+        }
+
+        chart.render();
+
+    });
+
+
+</script>
+
+</body>
+</html>
+

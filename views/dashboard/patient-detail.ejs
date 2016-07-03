@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <%- include('component/head') %>
+    <title>{{ TITLE }}</title>
+    <style>
+        .table-user-information > tbody > tr {
+            border-top: 1px solid rgb(221, 221, 221);
+        }
+
+        .table-user-information > tbody > tr:first-child {
+            border-top: 0;
+        }
+
+
+        .table-user-information > tbody > tr > td {
+            border-top: 0;
+        }
+        .toppad
+        {margin-top:20px;
+    </style>
+
+</head>
+<body>
+
+<div class="wrapper">
+
+    <%- include('component/sidebar') %>
+
+    <div class="main-panel">
+
+        <%- include('component/navbar', { breadcumb : "Dashboard > Patients > Detail" } ) %>
+
+
+        <div class="content">
+            <div class="container-fluid">
+
+            	<!-- MAIN CONTENT -->
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+
+                            <!-- Panel Profile -->
+                            <div class="col-md-5">
+                                <div class="card card-user">
+                                    <div style="height: 80px;" class="image">
+                                        <!--<img src="https://ununsplash.imgix.net/photo-1431578500526-4d9613015464?fit=crop&fm=jpg&h=300&q=75&w=400" alt="..."/>-->
+                                    </div>
+                                    <div class="content">
+                                        <div class="author">
+                                            <a href="#">
+                                                <img class="avatar border-gray" src="/assets/img/faces/face-0.jpg" alt="..."/>
+
+                                                <h4 class="title">Kiswanto D<br />
+                                                    <small>Username : kiswanto_d2</small>
+                                                </h4>
+                                            </a>
+                                        </div>
+
+                                        <table class="table table-user-information">
+                                            <tbody>
+                                            <tr>
+                                                <td>Address</td>
+                                                <td>Jalan Raya Pangandaran</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Device ID</td>
+                                                <td>420557</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Date of Birth</td>
+                                                <td>01/24/1988</td>
+                                            </tr>
+
+                                            <tr>
+                                            <tr>
+                                                <td>Gender</td>
+                                                <td>Male</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Alert Receiver</td>
+                                                <td>+628983478895 (Self)</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>+6281329329982 (Wife)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Email</td>
+                                                <td><a href="mailto:kiswanto.d21@gmail.com">kiswanto.d21@gmail.com</a></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- User Monitor -->
+                            <div class="col-md-7">
+                                <div class="card">
+                                    <div class="header">
+
+                                        <h5 class="title">Patient : Kiswanto D</h5>
+                                        <p class="category">Username : kinto_d2 | Device ID : 420557</p>
+
+                                    </div>
+                                    <div class="content">
+
+
+                                        <div id="chartContainer" style="height: 420px;">
+                                        </div>
+
+                                        <div class="footer">
+                                            <hr>
+                                            <div class="stats">
+                                                <i class="fa fa-circle text-success"></i> Device Connected
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <%- include('component/footer') %>
+
+    </div>
+</div>
+
+    <%- include('component/body_js') %>
+<script src="/lib/canvasjs/canvasjs.min.js"></script>
+<script type="text/javascript">
+    window.onload = function () {
+
+        var dps = []; // dataPoints
+
+        var chart = new CanvasJS.Chart("chartContainer",{
+            data: [{ type: "line", dataPoints: dps }]
+        });
+
+        var xVal = 0;
+        var yVal = 100;
+        var updateInterval = 100;
+        var dataLength = 100; // number of dataPoints visible at any point
+
+        var updateChart = function (count) {
+            count = count || 1;
+            // count is number of times loop runs to generate random dataPoints.
+
+            for (var j = 0; j < count; j++) {
+                yVal = yVal +  Math.round(5 + Math.random() *(-5-5));
+                dps.push({
+                    x: xVal,
+                    y: yVal
+                });
+                xVal++;
+            };
+            if (dps.length > dataLength)
+            {
+                dps.shift();
+            }
+
+            chart.render();
+
+        };
+
+        // generates first set of dataPoints
+        // updateChart(dataLength);
+
+        // update chart after specified time.
+        setInterval(updateChart, updateInterval);
+
+    }
+</script>
+
+</body>
+
+</html>

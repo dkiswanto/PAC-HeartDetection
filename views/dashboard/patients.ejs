@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <%- include('component/head') %>
+    <title>{{ TITLE }}</title>
+
+</head>
+<body>
+
+<div class="wrapper">
+
+    <%- include('component/sidebar') %>
+
+    <div class="main-panel">
+
+        <%- include('component/navbar', { breadcumb : "Dashboard > Patients" } ) %>
+
+
+        <div class="content">
+            <div class="container-fluid">
+
+            	<!-- MAIN CONTENT -->
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="header">
+                                <h4 class="title">List Patient</h4>
+                                <!--<p class="category">Here is a subtitle for this table</p>-->
+                            </div>
+                            <div class="content table-responsive table-full-width">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <th width="40px">ID</th>
+                                    <th>Name</th>
+                                    <th width="30">Age</th>
+                                    <th width="100px">Blood Type</th>
+                                    <th>Address</th>
+                                    <th style="text-align: center">Action</th>
+                                    </thead>
+                                    <tbody>
+                                    <% for (var i = 0; i <8; i++) { %>
+                                    <tr>
+                                        <td>A210</td>
+                                        <td>Kiswanto D2</td>
+                                        <td>29</td>
+                                        <td >O</td>
+                                        <td>Jalan Raya Pangandaran</td>
+                                        <td align="center">
+                                            <a href="/dashboard/patients/detail" style="margin-right: 10px" class="btn btn-sm btn-primary">Detail</a>
+                                            <a class="btn btn-sm btn-danger">Delete</a>
+                                        </td>
+                                    </tr>
+                                    <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <%- include('component/footer') %>
+
+    </div>
+</div>
+
+    <%- include('component/body_js') %>
+
+</body>
+
+</html>
