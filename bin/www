@@ -5,35 +5,6 @@ var app = require('../app');
 var debug = require('debug')('pulse-server:server');
 var http = require('http');
 
-// ------------ MOSCA --------------
-var mosca = require('mosca');
-
-var moscaBroker = new mosca.Server( { port : 1883 } );
-var clientID;
-// log when mosca broker running.
-moscaBroker.on('ready', function () {
-  console.log('Mosca server is up and running in port 1883')
-});
-
-// log client connected
-moscaBroker.on('clientConnected', function(client) {
-  clientID = client.id;
-  console.log('mqtt client connected : ', client.id);
-});
-
-// Forward mqtt data to socket
-moscaBroker.on('published', function(packet, client) {
-  if(typeof client != 'undefined'){
-    console.log('Published Data : ', packet.payload.toString('utf-8'));
-    // forward via socket io (data object js)
-    io.emit('stream/' + client.id , {
-      id : client.id,
-      data : packet.payload.toString('utf-8') //int string
-    });
-  }
-});
-
-
 // Get port from environment and store in Express.
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
@@ -43,7 +14,6 @@ var server = http.createServer(app);
 
 // Socket.io instance
 var io = require('socket.io')(server);
-
 
 // Listen on provided port, on all network interfaces.
 server.listen(port);
@@ -100,3 +70,31 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+// ------------ MOSCA --------------//
+var mosca = require('mosca');
+
+var moscaBroker = new mosca.Server( { port : 1883 } );
+var clientID;
+// log when mosca broker running.
+moscaBroker.on('ready', function () {
+  console.log('Mosca server is up and running in port 1883')
+});
+
+// log client connected
+moscaBroker.on('clientConnected', function(client) {
+  clientID = client.id;
+  console.log('mqtt client connected : ', client.id);
+});
+
+// Forward mqtt data to socket
+moscaBroker.on('published', function(packet, client) {
+  if(typeof client != 'undefined'){
+    console.log('Published Data : ', packet.payload.toString('utf-8'));
+    // forward via socket io (data object js)
+    io.emit('stream/' + client.id , {
+      id : client.id,
+      data : packet.payload.toString('utf-8') //int string
+    });
+  }
+});
