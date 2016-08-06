@@ -5,13 +5,22 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
+var Patient = require('../models/patient');
 
 router.get('/' , function (req,res,next) {
-    res.render('dashboard/dashboard-main', { req : req, page_name : "main"} );
+    res.render('dashboard/dashboard-main', {
+        req : req,
+        page_name : "main"
+    } );
 });
 
 router.get('/patients', function (req,res,next) {
-    res.render('dashboard/patients', { req : req, page_name : "patients"});
+
+
+    res.render('dashboard/patients', {
+        req : req,
+        page_name : "patients"
+    });
 });
 
 router.get('/patients/detail', function (req,res,next) {

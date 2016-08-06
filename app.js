@@ -12,7 +12,6 @@ var authLocal = require('./middleware/auth-local');
 
 // import route files
 var routes = require('./routes/index');
-var users = require('./routes/users');
 var dashboard = require('./routes/dashboard');
 var api = require('./routes/api');
 
@@ -24,7 +23,7 @@ app.set('view engine', 'ejs');
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ type: 'application/*+json' }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({keys: ['secretkey1', 'secretkey2', '...']}));
@@ -36,11 +35,20 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // passport config
-var Account = require('./models/doctor');
-passport.use(new LocalStrategy(Account.authenticate()));
+var Doctor = require('./models/doctor');
+var Patient = require('./models/patient');
+
+passport.use(new LocalStrategy(Doctor.authenticate()));
+passport.use('api-login', new LocalStrategy(
+    Patient.authenticate()
+));
+
 // passport.use(Doctor.createStrategy());
-passport.serializeUser(Account.serializeUser());
-passport.deserializeUser(Account.deserializeUser());
+passport.serializeUser(Doctor.serializeUser());
+passport.deserializeUser(Doctor.deserializeUser());
+
+passport.serializeUser(Patient.serializeUser());
+passport.serializeUser(Patient.serializeUser());
 
 // mongoose
 mongoose.connect('mongodb://localhost:27017/pac_db');
@@ -48,7 +56,6 @@ mongoose.connect('mongodb://localhost:27017/pac_db');
 
 // Registered Route
 app.use('/', routes);
-app.use('/users', users);
 app.use('/dashboard', authLocal);
 app.use('/dashboard', dashboard);
 app.use('/api', api);

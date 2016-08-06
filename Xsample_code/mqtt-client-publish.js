@@ -1,13 +1,15 @@
-/**
- * Created by g40 on 26/06/16.
- */
+// /**
+//  * Created by g40 on 26/06/16.
+//  */
 var sleep = require('sleep');
 var mqtt = require('mqtt');
 var clientId = 'kinto21_sensor';
 
 console.log('MQTT Client Running,');
-var client  = mqtt.connect('mqtt://localhost:1883', {
+var client  = mqtt.connect('mqtt://pac.helloproclub.com:1883', {
     clientId : clientId
+}, function(err,test){  
+    console.log(err);
 });
 
 client.on('connect', function () {
@@ -19,5 +21,11 @@ client.on('connect', function () {
         console.log('Client ' + clientId + ' publish : ' + message);
     }
 });
+//
+// // client.publish('stream/' + clientId , "HELLOW");
 
-// client.publish('stream/' + clientId , "HELLOW");
+// var mqtt = require('../..')
+//     , client = mqtt.connect();
+//
+// client.publish('presence', 'hello!');
+// client.end();   

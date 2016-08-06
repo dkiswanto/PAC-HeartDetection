@@ -96,5 +96,6 @@ moscaBroker.on('published', function(packet, client) {
       id : client.id,
       data : packet.payload.toString('utf-8') //int string
     });
+    console.log('etest');
   }
 });

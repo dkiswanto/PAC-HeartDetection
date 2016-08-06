@@ -47,7 +47,7 @@ router.post('/register', function(req, res, next) {
   Doctor.register(new Doctor({ username : req.body.username, name : req.body.name }), req.body.password, function(err, account) {
     if (err) {
       // res.render('register', { account : account });
-      res.redirect({message : "username already taken"});
+      res.json({message : "username already taken"});
     }
     passport.authenticate('local')(req, res, function () {
       res.redirect('/');
