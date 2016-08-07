@@ -70,6 +70,7 @@ router.post('/patient/:username', jsonParser, function (req, res) {
             data.phone_number = req.body.phone_number;
             data.alert_email = req.body.alert_email;
             data.alert_phone = req.body.alert_phone;
+            data.age = req.body.age;    
             data.save();
 
             return res.json({message: "data patient has been edit"});

@@ -13,7 +13,8 @@ var Patient = new Schema({
     device_id: String,
     phone_number: String,
     alert_phone: String,
-    alert_email: String
+    alert_email: String,
+    age : Number
 });
 
 Patient.plugin(uniqueValidator);

@@ -53,8 +53,8 @@
                                             <a href="#">
                                                 <img class="avatar border-gray" src="/assets/img/faces/face-0.jpg" alt="..."/>
 
-                                                <h4 class="title">Kiswanto D<br />
-                                                    <small>Username : kiswanto_d2</small>
+                                                <h4 class="title"><%- patient.name %><br />
+                                                    <small>Username : <%- patient.username %></small>
                                                 </h4>
                                             </a>
                                         </div>
@@ -63,33 +63,33 @@
                                             <tbody>
                                             <tr>
                                                 <td>Address</td>
-                                                <td>Jalan Raya Pangandaran</td>
+                                                <td><%- patient.address %></td>
                                             </tr>
                                             <tr>
                                                 <td>Device ID</td>
-                                                <td>420557</td>
+                                                <td><%- patient.device_id %></td>
                                             </tr>
-                                            <tr>
-                                                <td>Date of Birth</td>
-                                                <td>01/24/1988</td>
-                                            </tr>
+                                            <!--<tr>-->
+                                                <!--<td>Gender</td>-->
+                                                <!--<td>01/24/1988</td>-->
+                                            <!--</tr>-->
 
                                             <tr>
                                             <tr>
-                                                <td>Gender</td>
-                                                <td>Male</td>
+                                                <td>Age</td>
+                                                <td><%- patient.age %></td>
                                             </tr>
                                             <tr>
                                                 <td>Alert Receiver</td>
-                                                <td>+628983478895 (Self)</td>
+                                                <td><%- patient.alert_phone %> (Phone)</td>
                                             </tr>
                                             <tr>
                                                 <td></td>
-                                                <td>+6281329329982 (Wife)</td>
+                                                <td><%- patient.alert_email %> (Email)</td>
                                             </tr>
                                             <tr>
-                                                <td>Email</td>
-                                                <td><a href="mailto:kiswanto.d21@gmail.com">kiswanto.d21@gmail.com</a></td>
+                                                <td>Phone Number</td>
+                                                <td><a href="#"><%- patient.phone_number %></a></td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -102,8 +102,8 @@
                                 <div class="card">
                                     <div class="header">
 
-                                        <h5 class="title">Patient : Kiswanto D</h5>
-                                        <p class="category">Username : kinto_d2 | Device ID : 420557</p>
+                                        <h5 class="title">Patient : <%- patient.name %></h5>
+                                        <p class="category">Username : <%- patient.username %> | Device ID : <%- patient.device_id %></p>
 
                                     </div>
                                     <div class="content">
@@ -138,49 +138,44 @@
 </div>
 
     <%- include('component/body_js') %>
+<script src="http://localhost:3000/socket.io/socket.io.js"></script>
 <script src="/lib/canvasjs/canvasjs.min.js"></script>
-<script type="text/javascript">
-    window.onload = function () {
+<script>
 
-        var dps = []; // dataPoints
+    var socket = io('http://localhost:3000');
+    // listening to event
 
-        var chart = new CanvasJS.Chart("chartContainer",{
-            data: [{ type: "line", dataPoints: dps }]
+    var dps = []; // dataPoints
+
+    var chart = new CanvasJS.Chart("chartContainer",{
+        data: [{ type: "line", dataPoints: dps }]
+    });
+
+    var xVal = 0;
+    var yVal = 100;
+    var updateInterval = 100;
+    var dataLength = 100; // number of dataPoints visible at any point
+
+
+    socket.on('stream/<%- patient.username + "/" +patient.device_id %>' , function (data) {
+//        console.log(data);
+        dps.push({
+            x: xVal,
+            y: parseInt(data.data)
         });
 
-        var xVal = 0;
-        var yVal = 100;
-        var updateInterval = 100;
-        var dataLength = 100; // number of dataPoints visible at any point
+        xVal++;
 
-        var updateChart = function (count) {
-            count = count || 1;
-            // count is number of times loop runs to generate random dataPoints.
+        if (dps.length > dataLength)
+        {
+            dps.shift();
+        }
 
-            for (var j = 0; j < count; j++) {
-                yVal = yVal +  Math.round(5 + Math.random() *(-5-5));
-                dps.push({
-                    x: xVal,
-                    y: yVal
-                });
-                xVal++;
-            };
-            if (dps.length > dataLength)
-            {
-                dps.shift();
-            }
+        chart.render();
 
-            chart.render();
+    });
 
-        };
 
-        // generates first set of dataPoints
-        // updateChart(dataLength);
-
-        // update chart after specified time.
-        setInterval(updateChart, updateInterval);
-
-    }
 </script>
 
 </body>

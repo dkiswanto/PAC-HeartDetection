@@ -32,27 +32,29 @@
                             <div class="content table-responsive table-full-width">
                                 <table class="table table-hover">
                                     <thead>
-                                    <th width="40px">ID</th>
-                                    <th>Name</th>
-                                    <th width="30">Age</th>
-                                    <th width="100px">Blood Type</th>
+                                    <th style="width:10px">ID</th>
+                                    <th width="60px">Username</th>
+                                    <th width="90px">Full Name</th>
+                                    <th width="10">Age</th>
+                                    <th width="100px">Device ID</th>
                                     <th>Address</th>
                                     <th style="text-align: center">Action</th>
                                     </thead>
                                     <tbody>
-                                    <% for (var i = 0; i <8; i++) { %>
+                                    <% patients.forEach(function(patient) { %>
                                     <tr>
-                                        <td>A210</td>
-                                        <td>Kiswanto D2</td>
-                                        <td>29</td>
-                                        <td >O</td>
-                                        <td>Jalan Raya Pangandaran</td>
+                                        <td style="width:20px" align="center"><%- patient._id %></td>
+                                        <td><%- patient.username %></td>
+                                        <td><%- patient.name %></td>
+                                        <td><%- patient.age %></td>
+                                        <td><%- patient.device_id %></td>
+                                        <td><%- patient.address %></td>
                                         <td align="center">
-                                            <a href="/dashboard/patients/detail" style="margin-right: 10px" class="btn btn-sm btn-primary">Detail</a>
-                                            <a class="btn btn-sm btn-danger">Delete</a>
+                                            <a href="/dashboard/patients/<%- patient._id%>"  class="btn btn-sm btn-primary">Detail</a>
+                                            <!-- style="margin-right: 10px" <a class="btn btn-sm btn-danger">Delete</a>-->
                                         </td>
                                     </tr>
-                                    <% } %>
+                                    <% }) %>
                                     </tbody>
                                 </table>
                             </div>
