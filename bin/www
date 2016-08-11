@@ -5,6 +5,10 @@ var app = require('../app');
 var debug = require('debug')('pulse-server:server');
 var http = require('http');
 
+// Import Detection Library
+var Detection = require('../utility/Detection');
+var detector = new Detection();
+
 // Get port from environment and store in Express.
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
@@ -87,15 +91,43 @@ moscaBroker.on('clientConnected', function(client) {
   console.log('mqtt client connected : ', client.id);
 });
 
+
 // Forward mqtt data to socket
 moscaBroker.on('published', function(packet, client) {
   if(typeof client != 'undefined'){
-    console.log('Published Data : ', packet.payload.toString('utf-8'));
-    // forward via socket io (data object js)
+
+    console.log("Data Publish : ", packet.payload.toString('utf-8'));
+    console.log("Client ID : ", client.id);
+    console.log("Topic : ", packet.topic);
+
+    var packet_data = packet.payload.toString('utf-8').split(',');
+    // var raw = packet_data[0];
+    // var isQrs = packet_data[1];
+    // var bpm = packet_data[2];
+    // var count = packet_data[3];
+
+    // var volt = detector.convertAdcToVolt(raw);
+
+    //  update bpm
+    // if(bpm != 0) {
+    //   var prediction = detector.addData(bpm, count);
+    //   console.log('BPM : ', bpm);
+
+      // io.emit('stream/' + client.id , {
+      //   type : "prediction",
+      //   data : prediction
+      // });
+    // }
+
+    // if(count % 3 == 0){
+    var raw_data = packet_data[0];
+    // console.log(typeof raw_data);
     io.emit('stream/' + client.id , {
       id : client.id,
-      data : packet.payload.toString('utf-8') //int string
+      type : 'stream',
+      data : [raw_data] //int
     });
-    console.log('etest');
+    // }
+  
   }
 });

@@ -3,7 +3,7 @@
 //  */
 var sleep = require('sleep');
 var mqtt = require('mqtt');
-var clientId = 'patient-02/02WXO01';
+var clientId = '02WXO01';
 
 console.log('MQTT Client Running,');
 var client  = mqtt.connect('mqtt://localhost:1883', {
@@ -13,19 +13,12 @@ var client  = mqtt.connect('mqtt://localhost:1883', {
 });
 
 client.on('connect', function () {
-    var message; //integers
+    var count = 0;
     while (true) {
-        sleep.usleep(20000);
-        message = Math.floor(Math.random() * (100-20) + 1);
+        var message = Math.floor(Math.random() * (100-60) + 1) + "," + count;
         client.publish('stream/' + clientId , message.toString());
         console.log('Client ' + clientId + ' publish : ' + message);
+        count += 1;
+        sleep.usleep(20000); //2 ms = 2000
     }
 });
-
-// // client.publish('stream/' + clientId , "HELLOW");
-
-// var mqtt = require('../..')
-//     , client = mqtt.connect();
-//
-// client.publish('presence', 'hello!');
-// client.end();   

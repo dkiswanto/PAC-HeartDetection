@@ -101,10 +101,9 @@
                             <div class="col-md-7">
                                 <div class="card">
                                     <div class="header">
-
+                                        <p id="bpm" class="pull-right"><i style="color: #CE4142;" class="fa fa-heart"></i> bpm</p>
                                         <h5 class="title">Patient : <%- patient.name %></h5>
                                         <p class="category">Username : <%- patient.username %> | Device ID : <%- patient.device_id %></p>
-
                                     </div>
                                     <div class="content">
 
@@ -115,7 +114,12 @@
                                         <div class="footer">
                                             <hr>
                                             <div class="stats">
-                                                <i class="fa fa-circle text-success"></i> Device Connected
+                                                <i id="sick1" class="fa fa-circle text-danger"></i> PAC
+                                                <i id="sick2" class="fa fa-circle text-danger"></i> AtrialTachycardia
+                                                <i id="sick3" class="fa fa-circle text-danger"></i> BundleBranchBlock
+                                                <br>
+                                                <i id="sick4" class="fa fa-circle text-danger"></i> SuperVentricularTachycardia
+                                                <i id="sick5" class="fa fa-circle text-danger"></i> TargetHeartRate
                                             </div>
                                         </div>
 
@@ -138,6 +142,7 @@
 </div>
 
     <%- include('component/body_js') %>
+
 <script src="http://localhost:3000/socket.io/socket.io.js"></script>
 <script src="/lib/canvasjs/canvasjs.min.js"></script>
 <script>
@@ -148,30 +153,115 @@
     var dps = []; // dataPoints
 
     var chart = new CanvasJS.Chart("chartContainer",{
-        data: [{ type: "line", dataPoints: dps }]
+        data: [{ type: "line", dataPoints: dps }],
+        axisY: {
+            labelFontSize : 10,
+            maximum: 25,
+            minimum: -25
+//            interval: 0.25
+        },
+        axisX: {
+            labelFontSize : 10
+        }
     });
 
     var xVal = 0;
     var yVal = 100;
-    var updateInterval = 100;
-    var dataLength = 100; // number of dataPoints visible at any point
+    var dataLength = 50; // number of dataPoints visible at any point
 
 
-    socket.on('stream/<%- patient.username + "/" +patient.device_id %>' , function (data) {
-//        console.log(data);
-        dps.push({
-            x: xVal,
-            y: parseInt(data.data)
-        });
+    socket.on('stream/<%- patient.device_id %>' , function (data) {
 
-        xVal++;
+//        console.log('data volt : ', data.data[0]);
 
-        if (dps.length > dataLength)
-        {
-            dps.shift();
-        }
+//        if(data.type == 'prediction'){
+////            prediction[0] = isPAC(R_distance);
+////            prediction[1] = isAtrialTachycardia();
+////            prediction[2] = isBundleBranchBlock(R_distance);
+////            prediction[3] = isSuperVentricularTachycardia(bpm);
+////            prediction[4] = isBradycardia(bpm);
+////            prediction[5] = isTargetHeartRate(bpm, 22); */
+//
+//            console.log(data.data);
+//            if(data.data[0] == true) {
+//                $('#sick1').addClass('text-success');
+//                $('#sick1').removeClass('text-danger');
+//                setTimeout(function(){
+//                    $('#sick1').removeClass('text-success');
+//                    $('#sick1').addClass('text-danger');
+//                }, 4000);
+//            }
+//
+//            if(data.data[1] == true) {
+//                $('#sick2').addClass('text-success');
+//                $('#sick2').removeClass('text-danger');
+//                setTimeout(function(){
+//                    $('#sick2').removeClass('text-success');
+//                    $('#sick2').addClass('text-danger');
+//                }, 4000);
+//            }
+//
+//            if(data.data[2] == true) {
+//                $('#sick3').addClass('text-success');
+//                $('#sick3').removeClass('text-danger');
+//                setTimeout(function(){
+//                    $('#sick3').removeClass('text-success');
+//                    $('#sick3').addClass('text-danger');
+//                }, 4000);
+//            }
+//
+//            if(data.data[3] == true) {
+//                $('#sick4').addClass('text-success');
+//                $('#sick4').removeClass('text-danger');
+//                setTimeout(function(){
+//                    $('#sick4').removeClass('text-success');
+//                    $('#sick4').addClass('text-danger');
+//                }, 4000);
+//            }
+//
+//            if(data.data[4] == true) {
+//                $('#sick5').addClass('text-success');
+//                $('#sick5').removeClass('text-danger');
+//                setTimeout(function(){
+//                    $('#sick5').removeClass('text-success');
+//                    $('#sick5').addClass('text-danger');
+//                }, 4000);
+//            }
+//
+//            if(data.data[4] == true) {
+//                $('#sick6').addClass('text-success');
+//                $('#sick6').removeClass('text-danger');
+//                setTimeout(function(){
+//                    $('#sick6').removeClass('text-success');
+//                    $('#sick6').addClass('text-danger');
+//                }, 4000);
+//            }
+//
+//
+//
+//        } else { //stream data
 
-        chart.render();
+            // Change BPM
+//            if(data.data[1] != 0 ){
+//                $('#bpm').html('<i style="color: #CE4142;" class="fa fa-heart"></i> ' + data.data[1].toString() + 'bpm')
+//            }
+
+            // Change ChartData
+            dps.push({
+                x: xVal,
+                y: parseFloat(data.data[0])
+            });
+
+            xVal++;
+
+            if (dps.length > dataLength)
+            {
+                dps.shift();
+            }
+
+            chart.render();
+
+//        }
 
     });
 

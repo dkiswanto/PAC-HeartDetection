@@ -81,7 +81,7 @@
     var dataLength = 100; // number of dataPoints visible at any point
 
     <% patients.forEach(function (patient) {%>
-    socket.on('stream/<%- patient.username + "/" +patient.device_id %>' , function (data) {
+    socket.on('stream/<%- patient.device_id %>' , function (data) {
 
         dps.push({
             x: xVal,
