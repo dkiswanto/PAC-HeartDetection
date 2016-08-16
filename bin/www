@@ -117,7 +117,7 @@ moscaBroker.on('published', function(packet, client) {
       io.emit('visual/' + client.id , {
         id : client.id,
         type : 'visual',
-        data : data //int
+        data : data //float/int
       });
 
     }
@@ -134,6 +134,17 @@ moscaBroker.on('published', function(packet, client) {
       });
     }
 
+    //Catch packet topic "BPM for the first time"
+    if(packet.topic.split('/')[0] == "bpm"){
+      var bpm = packet.payload.toString('utf-8');
+      console.log('bpm first time');
+
+      io.emit('visual/' + client.id , {
+        id : client.id,
+        type : 'bpm',
+        data : bpm //string
+      });
+    }
 
 
   }

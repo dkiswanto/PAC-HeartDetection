@@ -168,7 +168,7 @@
     });
 
     var xVal = 0;
-    var dataLength = 700; // number of dataPoints visible at any point
+    var dataLength = 500; // number of dataPoints visible at any point
 
 
     socket.on('visual/<%- patient.device_id %>' , function (data) {
@@ -180,7 +180,7 @@
 
         // Change ChartData
         if(data.type == 'visual') {
-            console.log('data : ', data.data);
+//            console.log('data : ', data.data);
 
             dps.push({ x: xVal, y: parseFloat(data.data) });
             xVal++;
@@ -189,8 +189,29 @@
         }
 
         if(data.type == 'alert'){
-            console.log("alert : ", data.data);
+//            console.log("alert : ", data.data);
             var alert_obj = JSON.parse(data.data);
+
+            if(alert_obj.PVC){
+                $('#PVC').addClass('text-danger');
+                setTimeout(function(){
+                    $('#PVC').removeClass('text-danger');
+                }, 4000);
+            }
+
+            if(alert_obj.PAC){
+                $('#PAC').addClass('text-danger');
+                setTimeout(function(){
+                    $('#PAC').removeClass('text-danger');
+                }, 4000);
+            }
+
+            if(alert_obj.BUNDLE_BRANCH){
+                $('#BUNDLE_BRANCH').addClass('text-danger');
+                setTimeout(function(){
+                    $('#BUNDLE_BRANCH').removeClass('text-danger');
+                }, 4000);
+            }
 
             if(alert_obj.AtrialTachycardia){
                 $('#AtrialTachycardia').addClass('text-danger');
@@ -211,13 +232,20 @@
                 setTimeout(function(){
                     $('#BundleBranchBlock').removeClass('text-danger');
                 }, 4000);
-
             }
 
-
+            // Change BPM
+            $('#bpm').html('<i style="color: #CE4142;" class="fa fa-heart"></i> ' + alert_obj.bpm.toString() + ' bpm')
 
 
         }
+
+        if(data.type == "bpm"){
+            console.log("GET BPM for the first time")
+            $('#bpm').html('<i style="color: #CE4142;" class="fa fa-heart"></i> ' + data.data.toString() + ' bpm')
+        }
+
+
 
     });
 
