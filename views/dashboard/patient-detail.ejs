@@ -114,12 +114,14 @@
                                         <div class="footer">
                                             <hr>
                                             <div class="stats">
-                                                <i id="sick1" class="fa fa-circle text-danger"></i> PAC
-                                                <i id="sick2" class="fa fa-circle text-danger"></i> AtrialTachycardia
-                                                <i id="sick3" class="fa fa-circle text-danger"></i> BundleBranchBlock
+                                                <i id="PVC" class="fa fa-circle "></i> PVC
+                                                <i id="PAC" class="fa fa-circle "></i> PAC
+                                                <i id="BUNDLE_BRANCH" class="fa fa-circle "></i> BUNDLE_BRANCH
                                                 <br>
-                                                <i id="sick4" class="fa fa-circle text-danger"></i> SuperVentricularTachycardia
-                                                <i id="sick5" class="fa fa-circle text-danger"></i> TargetHeartRate
+                                                <i id="AtrialTachycardia" class="fa fa-circle "></i> AtrialTachycardia
+                                                <i id="VentricularTachycardia" class="fa fa-circle "></i> VentricularTachycardia
+                                                <i id="BundleBranchBlock" class="fa fa-circle "></i> BundleBranchBlock
+
                                             </div>
                                         </div>
 
@@ -155,113 +157,67 @@
     var chart = new CanvasJS.Chart("chartContainer",{
         data: [{ type: "line", dataPoints: dps }],
         axisY: {
-            labelFontSize : 10,
-            maximum: 25,
-            minimum: -25
+            labelFontSize : 1,
+            maximum: 1,
+            minimum: -1
 //            interval: 0.25
         },
         axisX: {
-            labelFontSize : 10
+            labelFontSize : 1
         }
     });
 
     var xVal = 0;
-    var yVal = 100;
-    var dataLength = 50; // number of dataPoints visible at any point
+    var dataLength = 700; // number of dataPoints visible at any point
 
 
-    socket.on('stream/<%- patient.device_id %>' , function (data) {
+    socket.on('visual/<%- patient.device_id %>' , function (data) {
 
-//        console.log('data volt : ', data.data[0]);
+        //Change BPM
+        //if(data.data[1] != 0 ){
+        //    $('#bpm').html('<i style="color: #CE4142;" class="fa fa-heart"></i> ' + data.data[1].toString() + 'bpm')
+        //}
 
-//        if(data.type == 'prediction'){
-////            prediction[0] = isPAC(R_distance);
-////            prediction[1] = isAtrialTachycardia();
-////            prediction[2] = isBundleBranchBlock(R_distance);
-////            prediction[3] = isSuperVentricularTachycardia(bpm);
-////            prediction[4] = isBradycardia(bpm);
-////            prediction[5] = isTargetHeartRate(bpm, 22); */
-//
-//            console.log(data.data);
-//            if(data.data[0] == true) {
-//                $('#sick1').addClass('text-success');
-//                $('#sick1').removeClass('text-danger');
-//                setTimeout(function(){
-//                    $('#sick1').removeClass('text-success');
-//                    $('#sick1').addClass('text-danger');
-//                }, 4000);
-//            }
-//
-//            if(data.data[1] == true) {
-//                $('#sick2').addClass('text-success');
-//                $('#sick2').removeClass('text-danger');
-//                setTimeout(function(){
-//                    $('#sick2').removeClass('text-success');
-//                    $('#sick2').addClass('text-danger');
-//                }, 4000);
-//            }
-//
-//            if(data.data[2] == true) {
-//                $('#sick3').addClass('text-success');
-//                $('#sick3').removeClass('text-danger');
-//                setTimeout(function(){
-//                    $('#sick3').removeClass('text-success');
-//                    $('#sick3').addClass('text-danger');
-//                }, 4000);
-//            }
-//
-//            if(data.data[3] == true) {
-//                $('#sick4').addClass('text-success');
-//                $('#sick4').removeClass('text-danger');
-//                setTimeout(function(){
-//                    $('#sick4').removeClass('text-success');
-//                    $('#sick4').addClass('text-danger');
-//                }, 4000);
-//            }
-//
-//            if(data.data[4] == true) {
-//                $('#sick5').addClass('text-success');
-//                $('#sick5').removeClass('text-danger');
-//                setTimeout(function(){
-//                    $('#sick5').removeClass('text-success');
-//                    $('#sick5').addClass('text-danger');
-//                }, 4000);
-//            }
-//
-//            if(data.data[4] == true) {
-//                $('#sick6').addClass('text-success');
-//                $('#sick6').removeClass('text-danger');
-//                setTimeout(function(){
-//                    $('#sick6').removeClass('text-success');
-//                    $('#sick6').addClass('text-danger');
-//                }, 4000);
-//            }
-//
-//
-//
-//        } else { //stream data
+        // Change ChartData
+        if(data.type == 'visual') {
+            console.log('data : ', data.data);
 
-            // Change BPM
-//            if(data.data[1] != 0 ){
-//                $('#bpm').html('<i style="color: #CE4142;" class="fa fa-heart"></i> ' + data.data[1].toString() + 'bpm')
-//            }
-
-            // Change ChartData
-            dps.push({
-                x: xVal,
-                y: parseFloat(data.data[0])
-            });
-
+            dps.push({ x: xVal, y: parseFloat(data.data) });
             xVal++;
+            if (dps.length > dataLength)  { dps.shift(); }
+            chart.render();
+        }
 
-            if (dps.length > dataLength)
-            {
-                dps.shift();
+        if(data.type == 'alert'){
+            console.log("alert : ", data.data);
+            var alert_obj = JSON.parse(data.data);
+
+            if(alert_obj.AtrialTachycardia){
+                $('#AtrialTachycardia').addClass('text-danger');
+                setTimeout(function(){
+                    $('#AtrialTachycardia').removeClass('text-danger');
+                }, 4000);
             }
 
-            chart.render();
+            if(alert_obj.VentricularTachycardia){
+                $('#VentricularTachycardia').addClass('text-danger');
+                setTimeout(function(){
+                    $('#VentricularTachycardia').removeClass('text-danger');
+                }, 4000);
+            }
 
-//        }
+            if(alert_obj.BundleBranchBlock){
+                $('#BundleBranchBlock').addClass('text-danger');
+                setTimeout(function(){
+                    $('#BundleBranchBlock').removeClass('text-danger');
+                }, 4000);
+
+            }
+
+
+
+
+        }
 
     });
 

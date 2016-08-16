@@ -70,22 +70,29 @@
 
     <% patients.forEach(function (patient) {%>
     var chart<%-patient._id%> = new CanvasJS.Chart("chart-<%-patient.username%>",{
-        data: [{ type: "line", dataPoints: dps }]
+        data: [{ type: "line", dataPoints: dps }],
+        axisY: {
+            labelFontSize : 1,
+            maximum: 1,
+            minimum: -1
+//            interval: 0.25
+        },
+        axisX: {
+            labelFontSize : 1
+        }
+
     });
     <%})%>
 
-
     var xVal = 0;
-    var yVal = 100;
-    var updateInterval = 100;
-    var dataLength = 100; // number of dataPoints visible at any point
+    var dataLength = 700; // number of dataPoints visible at any point
 
     <% patients.forEach(function (patient) {%>
-    socket.on('stream/<%- patient.device_id %>' , function (data) {
+    socket.on('visual/<%- patient.device_id %>' , function (data) {
 
         dps.push({
             x: xVal,
-            y: parseInt(data.data)
+            y: parseFloat(data.data)
         });
 
         xVal++;

@@ -16,7 +16,7 @@ client.on('connect', function () {
     var count = 0;
     while (true) {
         var message = Math.floor(Math.random() * (100-60) + 1) + "," + count;
-        client.publish('stream/' + clientId , message.toString());
+        client.publish('visual/' + clientId , message.toString());
         console.log('Client ' + clientId + ' publish : ' + message);
         count += 1;
         sleep.usleep(20000); //2 ms = 2000

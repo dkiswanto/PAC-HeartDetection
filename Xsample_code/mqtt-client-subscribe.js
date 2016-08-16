@@ -4,16 +4,16 @@
 
 var sleep = require('sleep');
 var mqtt = require('mqtt');
-var clientId = 'kinto21';
+var clientId = '02WXO01';
 
 console.log('MQTT Client Running : ' + clientId + '_phone');
 var client  = mqtt.connect('mqtt://localhost:1883', {
-    clientId : clientId + '_phone'
+    clientId : clientId
 });
 
 client.on('connect', function () {
     // TOPIC YANG DI SUBSCRIBE
-    client.subscribe('stream/' + clientId + '_sensor');
+    client.subscribe('visual/02WXO01');
 });
 
 client.on('message', function (topic, message) {
